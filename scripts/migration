@@ -1,0 +1,73 @@
+#!/bin/bash
+
+if [ ! -f .env ]; then
+    echo ".env file not found"
+    exit 1
+fi
+
+export $(grep -v '^#' .env | xargs)
+
+MIGRATION_PATH="database/migrations"
+
+DATABASE_URL="postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=$DB_SSLMODE"
+
+run_migration() {
+    migrate \
+        -path $MIGRATION_PATH \
+        -database "$DATABASE_URL" \
+        "$1"
+}
+
+create_migration() {
+
+    if [ -z "$1" ]; then
+        echo "Migration name is required"
+        echo "Example:"
+        echo "./migrate --create create_roles_table"
+        exit 1
+    fi
+
+    migrate create \
+        -ext sql \
+        -dir $MIGRATION_PATH \
+        "$1"
+}
+
+case "$1" in
+
+    --up)
+
+        run_migration up
+
+        ;;
+
+    --down)
+
+        run_migration down
+
+        ;;
+
+    --refresh)
+
+        run_migration down
+        run_migration up
+
+        ;;
+
+    --create)
+
+        create_migration "$2"
+
+        ;;
+
+    *)
+
+        echo "Usage:"
+        echo "./migrate --up"
+        echo "./migrate --down"
+        echo "./migrate --refresh"
+        echo "./migrate --create create_users_table"
+
+        ;;
+
+esac

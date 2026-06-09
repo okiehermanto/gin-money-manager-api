@@ -1,0 +1,52 @@
+#!/bin/bash
+
+if [ ! -f .env ]; then
+    echo ".env file not found"
+    exit 1
+fi
+
+export $(grep -v '^#' .env | xargs)
+
+SEEDER_PATH="database/seeders"
+
+run_sql() {
+    local file=$1
+
+    echo "Running: $file"
+
+    PGPASSWORD=$DB_PASSWORD psql \
+        -h $DB_HOST \
+        -U $DB_USER \
+        -d $DB_NAME \
+        -p $DB_PORT \
+        -f "$file"
+
+    echo "Done: $file"
+}
+
+case "$1" in
+
+    --all)
+
+        for file in $SEEDER_PATH/*.sql
+        do
+            run_sql "$file"
+        done
+
+        ;;
+
+    --single)
+
+        run_sql "$2"
+
+        ;;
+
+    *)
+
+        echo "Usage:"
+        echo "./seed --all"
+        echo "./seed --single path/to/file.sql"
+
+        ;;
+
+esac

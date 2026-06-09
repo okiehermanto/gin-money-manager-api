@@ -1,0 +1,10 @@
+run migration
+migrate -path database/migrations -database "postgres://postgres:rahasia@localhost:5432/money_manager_api?sslmode=disable" up
+
+create migration
+migrate create -ext sql -dir database/migrations create_todos_table
+
+create seeder
+
+run seeder
+migrate -path database/seeders -database "postgres://postgres:rahasia@localhost:5432/money_manager_api?sslmode=disable" up
