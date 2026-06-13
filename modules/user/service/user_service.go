@@ -7,22 +7,22 @@ import (
 	"gin-money-manager-api/modules/user/repository"
 )
 
-type UserCreatorService struct {
+type UserService struct {
 	userRepository repository.UserRepository
 	roleRepository repository.RoleRepository
 }
 
-func NewUserCreatorService(
+func NewUserService(
 	userRepository repository.UserRepository,
 	roleRepository repository.RoleRepository,
-) UserCreatorService {
-	return UserCreatorService{
+) UserService {
+	return UserService{
 		userRepository: userRepository,
 		roleRepository: roleRepository,
 	}
 }
 
-func (s *UserCreatorService) CreateUser(body *dto.CreateUserRequest) (*entity.User, error) {
+func (s *UserService) CreateUser(body *dto.CreateUserRequest) (*entity.User, error) {
 	var roles []entity.Role
 
 	s.roleRepository.DB().Where("id IN ?", body.Roles).Find(&roles)

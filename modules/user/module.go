@@ -14,13 +14,13 @@ func Register(r *gin.Engine, db *gorm.DB) {
 	userRepository := repository.NewUserRepository(db)
 	roleRepository := repository.NewRoleRepository(db)
 
-	userCreatorService := service.NewUserCreatorService(userRepository, roleRepository)
+	UserService := service.NewUserService(userRepository, roleRepository)
 
 	userContainer := &container.UserContainer{
 		RoleRepository: roleRepository,
 		UserRepository: userRepository,
 
-		UserCreatorService: userCreatorService,
+		UserService: UserService,
 	}
 
 	routes.RegisterRoleRoute(r, userContainer)

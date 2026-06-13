@@ -10,7 +10,7 @@ import (
 )
 
 func RegisterUserRoute(r *gin.Engine, container *container.UserContainer) {
-	createUser := command.NewCreateUser(&container.UserCreatorService)
+	createUser := command.NewCreateUser(&container.UserService)
 	userResource := resource.NewUserResource(container.UserRepository)
 
 	users := r.Group("/users")

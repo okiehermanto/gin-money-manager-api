@@ -9,5 +9,5 @@ type UserContainer struct {
 	RoleRepository repository.RoleRepository
 	UserRepository repository.UserRepository
 
-	UserCreatorService service.UserCreatorService
+	UserService service.UserService
 }

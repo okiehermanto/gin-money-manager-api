@@ -10,14 +10,12 @@ import (
 )
 
 type CreateUser struct {
-	creator service.UserCreatorService
+	service service.UserService
 }
 
-func NewCreateUser(
-	creator *service.UserCreatorService,
-) *CreateUser {
+func NewCreateUser(service *service.UserService) *CreateUser {
 	return &CreateUser{
-		creator: *creator,
+		service: *service,
 	}
 }
 
@@ -28,7 +26,7 @@ func (h *CreateUser) Handler(c *gin.Context) {
 		return
 	}
 
-	user, err := h.creator.CreateUser(&body)
+	user, err := h.service.CreateUser(&body)
 
 	response.Created(c, user, err)
 }
