@@ -23,9 +23,10 @@ func Register(
 	{
 		todos.GET("/completed", TodoFindCompleted.Handler)
 
-		todos.GET("/:id", todoResource.GetTodo)
-		todos.POST("", todoResource.CreateTodo)
-		todos.DELETE("/:id", todoResource.DeleteTodo)
-		todos.PATCH("/:id", todoResource.UpdateTodo)
+		todos.GET("", todoResource.Index)
+		todos.GET("/:id", todoResource.Show)
+		todos.POST("", todoResource.Create)
+		todos.DELETE("/:id", todoResource.Delete)
+		todos.PATCH("/:id", todoResource.Update)
 	}
 }

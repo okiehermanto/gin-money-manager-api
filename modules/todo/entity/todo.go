@@ -1,9 +1,13 @@
 package entity
 
-import "time"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type Todo struct {
-	ID        string    `json:"id"`
+	ID        uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 	Todo      string    `json:"todo"`
 	Completed bool      `json:"completed"`
 	CreatedAt time.Time `json:"created_at"`

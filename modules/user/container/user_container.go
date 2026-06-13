@@ -1,4 +1,4 @@
-package user
+package container
 
 import (
 	"gin-money-manager-api/modules/user/command"

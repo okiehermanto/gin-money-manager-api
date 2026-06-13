@@ -1,43 +1,32 @@
 package resource
 
 import (
-	"gin-money-manager-api/modules/shared/repository/options"
-	"gin-money-manager-api/modules/shared/response"
+	"gin-money-manager-api/modules/shared/dto"
+	"gin-money-manager-api/modules/shared/resource"
+	"gin-money-manager-api/modules/user/entity"
 	"gin-money-manager-api/modules/user/repository"
-
-	"github.com/gin-gonic/gin"
 )
 
 type UserResource struct {
-	userRepository repository.UserRepository
+	*resource.BaseResource[
+		entity.User,
+		dto.EmptyDto,
+		dto.EmptyDto,
+	]
 }
 
-func NewUserResource(
-	userRepository repository.UserRepository,
-) *UserResource {
+func NewUserResource(repository repository.UserRepository) *UserResource {
 	return &UserResource{
-		userRepository: userRepository,
-	}
-}
-
-func (r *UserResource) Index(c *gin.Context) {
-	var search = c.Query("search")
-
-	users, err := r.userRepository.FindAll(
-		&options.FindAllOptions{
+		BaseResource: &resource.BaseResource[entity.User, dto.EmptyDto, dto.EmptyDto]{
+			Repository: repository,
 			Relationships: []string{
 				"Roles",
 			},
-			Search: &options.SearchOptions{
-				Keyword: search,
-				Fields: []string{
-					"name",
-					"username",
-					"email",
-				},
+			SearchFields: []string{
+				"name",
+				"username",
+				"email",
 			},
 		},
-	)
-
-	response.Success(c, users, err)
+	}
 }
