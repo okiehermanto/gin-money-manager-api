@@ -17,10 +17,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-func (repository *userRepository) FindByUsername(
-	username string,
-) (*entity.User, error) {
-
+func (repository *userRepository) FindByUsername(username string) (*entity.User, error) {
 	var user entity.User
 
 	err := repository.DB().
