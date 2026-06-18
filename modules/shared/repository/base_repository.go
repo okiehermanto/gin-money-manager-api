@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"gin-money-manager-api/modules/shared/helper"
 	"gin-money-manager-api/modules/shared/repository/options"
 	"strings"
 
@@ -40,8 +41,9 @@ func (b *baseRepository[T]) Find(id string, options *options.FindOptions) (T, er
 	return entity, result.Error
 }
 
-func (b *baseRepository[T]) FindAll(options *options.FindAllOptions) ([]T, error) {
+func (b *baseRepository[T]) FindAll(options *options.FindAllOptions) ([]T, int, error) {
 	var entities []T
+	var CountTotal int64
 	query := b.db
 
 	if options != nil {
@@ -90,14 +92,22 @@ func (b *baseRepository[T]) FindAll(options *options.FindAllOptions) ([]T, error
 			)
 		}
 
+		if options.Paginate {
+			query.Model(new(T)).Count(&CountTotal)
+
+			options.Limit = helper.CoalesceInt(options.Limit, 50)
+			options.Page = helper.CoalesceInt(options.Page, 1)
+
+			query = query.Limit(options.Limit).Offset((options.Page - 1) * options.Limit)
+		}
+
 		if options.OrderBy != "" {
 			query = query.Order(options.OrderBy)
 		}
 	}
-
 	result := query.Find(&entities)
 
-	return entities, result.Error
+	return entities, int(CountTotal), result.Error
 }
 
 func (b *baseRepository[T]) Update(entity T) (T, error) {

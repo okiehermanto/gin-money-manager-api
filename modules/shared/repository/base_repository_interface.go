@@ -7,7 +7,7 @@ import (
 )
 
 type BaseRepository[T any] interface {
-	FindAll(options *options.FindAllOptions) ([]T, error)
+	FindAll(options *options.FindAllOptions) ([]T, int, error)
 	Find(id string, options *options.FindOptions) (T, error)
 	FindBy(where map[string]any) ([]T, error)
 	Create(entity T) (T, error)

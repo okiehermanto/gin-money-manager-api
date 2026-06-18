@@ -8,6 +8,7 @@ import (
 	"gin-money-manager-api/modules/expense-report/repository"
 	valueobject "gin-money-manager-api/modules/expense-report/value-object"
 	"gin-money-manager-api/modules/shared/helper"
+	"gin-money-manager-api/modules/shared/money"
 	"gin-money-manager-api/modules/shared/response"
 
 	"github.com/gin-gonic/gin"
@@ -33,9 +34,13 @@ func (h *CreateExpenseReport) Handler(c *gin.Context) {
 	user := c.MustGet("user").(userentity.User)
 
 	expenseReport := entity.ExpenseReport{
-		UserID: user.ID,
-		Name:   body.Name,
-		Type:   valueobject.ExpenseReportType(body.Type),
+		User: user,
+		Name: body.Name,
+		Type: valueobject.ExpenseReportType(body.Type),
+		Balance: money.Money{
+			Amount:   0,
+			Currency: "IDR",
+		},
 	}
 
 	expenseReport, err := h.repository.Create(expenseReport)

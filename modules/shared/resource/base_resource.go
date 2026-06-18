@@ -1,10 +1,12 @@
 package resource
 
 import (
+	"gin-money-manager-api/modules/shared/dto"
 	"gin-money-manager-api/modules/shared/helper"
 	"gin-money-manager-api/modules/shared/repository"
 	"gin-money-manager-api/modules/shared/repository/options"
 	"gin-money-manager-api/modules/shared/response"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
@@ -19,20 +21,60 @@ type BaseResource[
 
 	Relationships []string
 	SearchFields  []string
+	Filter        string
+
+	Paginate bool
+	Limit    int
+	Page     int
 }
 
 func (r *BaseResource[E, C, U]) Index(c *gin.Context) {
-	entities, err := r.Repository.FindAll(
-		&options.FindAllOptions{
-			Relationships: r.Relationships,
-			Search: &options.SearchOptions{
-				Keyword: c.Query("search"),
-				Fields:  r.SearchFields,
-			},
-		},
-	)
+	page, err := strconv.Atoi(c.DefaultQuery("page", "1"))
+	if err != nil {
+		page = 1
+	}
 
-	response.Success(c, entities, err)
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "50"))
+	if err != nil {
+		limit = 50
+	}
+
+	var findAllOptions = &options.FindAllOptions{
+		Relationships: r.Relationships,
+		Search: &options.SearchOptions{
+			Keyword: c.Query("search"),
+			Fields:  r.SearchFields,
+		},
+		Paginate: r.Paginate,
+		Limit:    limit,
+		Page:     page,
+	}
+
+	if r.Filter != "" {
+		findAllOptions.Filters = []options.Filter{
+			{
+				Field:    r.Filter,
+				Operator: "=",
+				Value:    c.Param(r.Filter),
+			},
+		}
+	}
+
+	entities, total, err := r.Repository.FindAll(findAllOptions)
+
+	if r.Paginate {
+		pagination := dto.Pagination{
+			Data:  entities,
+			Page:  page,
+			Limit: limit,
+			Total: total,
+		}
+
+		response.Success(c, pagination, err)
+	} else {
+		response.Success(c, entities, err)
+	}
+
 }
 
 func (r *BaseResource[E, C, U]) Show(c *gin.Context) {

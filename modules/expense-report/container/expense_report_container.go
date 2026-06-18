@@ -14,7 +14,7 @@ type ExpenseReportContainer struct {
 
 func NewExpenseReportContainer(db *gorm.DB) *ExpenseReportContainer {
 	userRepository := userrepository.NewUserRepository(db)
-	expenseReportRepository := repository.NewExpenseReport(db)
+	expenseReportRepository := repository.NewExpenseReportRepository(db)
 
 	return &ExpenseReportContainer{
 		UserRepository:          userRepository,

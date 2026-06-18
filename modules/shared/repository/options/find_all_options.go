@@ -18,4 +18,8 @@ type FindAllOptions struct {
 
 	Search  *SearchOptions
 	OrderBy string
+
+	Paginate bool
+	Limit    int
+	Page     int
 }

@@ -11,7 +11,7 @@ type expenseReportRepository struct {
 	repository.BaseRepository[entity.ExpenseReport]
 }
 
-func NewExpenseReport(db *gorm.DB) ExpenseReportRepository {
+func NewExpenseReportRepository(db *gorm.DB) ExpenseReportRepository {
 	return &expenseReportRepository{
 		BaseRepository: repository.NewBaseRepository[entity.ExpenseReport](db),
 	}
