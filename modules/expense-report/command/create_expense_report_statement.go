@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"gin-money-manager-api/modules/expense-report/dto"
 	"gin-money-manager-api/modules/expense-report/entity"
+	"gin-money-manager-api/modules/expense-report/event"
 	"gin-money-manager-api/modules/expense-report/repository"
+	eventmanager "gin-money-manager-api/modules/shared/event_manager"
 	"gin-money-manager-api/modules/shared/helper"
 	"gin-money-manager-api/modules/shared/money"
 	"gin-money-manager-api/modules/shared/response"
@@ -47,20 +49,29 @@ func (h *CreateExpenseReportStatement) Handler(c *gin.Context) {
 		fmt.Sprintf("storage/expense-reports/%s/attachments/", expenseReport.ID),
 		body.Attachment)
 
-	expenseReportStatement := entity.ExpenseReportStatement{
-		ExpenseReport: &expenseReport,
-		Author:        &user,
-		Name:          body.Name,
-		Description:   body.Description,
-		Attachment:    attachment,
-		Amount: money.Money{
-			Amount:   int64(body.Amount),
-			Currency: "IDR",
-		},
+	if err != nil {
+		response.ServerError(c, "Failed to upload file.")
+		return
 	}
 
-	expenseReportStatement, saveError := h.repository.Create(expenseReportStatement)
+	expenseReportStatement, saveError := h.repository.Create(
+		entity.ExpenseReportStatement{
+			ExpenseReport: &expenseReport,
+			Author:        &user,
+			Name:          body.Name,
+			Description:   body.Description,
+			Attachment:    attachment,
+			Amount: money.Money{
+				Amount:   int64(body.Amount),
+				Currency: "IDR",
+			},
+		})
+
+	eventmanager.Dispatcher.Emit(
+		event.ExpenseReportStatementCreatedEvent{
+			ExpenseReportStatement: &expenseReportStatement,
+		},
+	)
 
 	response.Success(c, expenseReportStatement, saveError)
-
 }

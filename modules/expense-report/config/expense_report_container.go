@@ -1,4 +1,4 @@
-package container
+package config
 
 import (
 	"gin-money-manager-api/modules/expense-report/repository"
