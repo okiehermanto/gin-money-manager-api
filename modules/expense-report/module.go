@@ -11,5 +11,6 @@ import (
 func Register(r *gin.Engine, db *gorm.DB) {
 	container := container.NewExpenseReportContainer(db)
 
+	routes.RegisterExpenseReportStatementRoute(r, container)
 	routes.RegisterExpenseReportRoute(r, container)
 }

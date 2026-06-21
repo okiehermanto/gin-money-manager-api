@@ -15,7 +15,7 @@ func RegisterExpenseReportRoute(r *gin.Engine, container *container.ExpenseRepor
 	ExpenseReportResource := resource.NewExpenseReportResource(container.ExpenseReportRepository)
 	userExpenseReportResource := resource.NewUserExpenseReportResource(container.ExpenseReportRepository)
 
-	userExpenseReport := r.Group("/users/:user_id/expense-reports")
+	userExpenseReport := r.Group("/users/:user/expense-reports")
 
 	userExpenseReport.GET("",
 		userExpenseReportResource.Index,
@@ -35,10 +35,9 @@ func RegisterExpenseReportRoute(r *gin.Engine, container *container.ExpenseRepor
 		ExpenseReportResource.Index,
 	)
 
-	expenseReports.GET("/:id",
+	expenseReports.GET("/:expense_report",
 		middleware.Auth(container.UserRepository),
 		middleware.HasRoles("admin"),
-		//anothermiddleware
-		ExpenseReportResource.Index,
+		ExpenseReportResource.Show,
 	)
 }

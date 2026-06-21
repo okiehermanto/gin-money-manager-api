@@ -6,6 +6,10 @@ import (
 	"github.com/google/uuid"
 )
 
+func (User) EntityName() string {
+	return "user"
+}
+
 type User struct {
 	ID        uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 	Name      string    `json:"name"`

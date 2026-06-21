@@ -8,16 +8,19 @@ import (
 )
 
 type ExpenseReportContainer struct {
-	UserRepository          userrepository.UserRepository
-	ExpenseReportRepository repository.ExpenseReportRepository
+	UserRepository                   userrepository.UserRepository
+	ExpenseReportRepository          repository.ExpenseReportRepository
+	ExpenseReportStatementRepository repository.ExpenseReportStatementRepository
 }
 
 func NewExpenseReportContainer(db *gorm.DB) *ExpenseReportContainer {
 	userRepository := userrepository.NewUserRepository(db)
 	expenseReportRepository := repository.NewExpenseReportRepository(db)
+	expenseReportStatementRepository := repository.NewExpenseReportStatementRepository(db)
 
 	return &ExpenseReportContainer{
-		UserRepository:          userRepository,
-		ExpenseReportRepository: expenseReportRepository,
+		UserRepository:                   userRepository,
+		ExpenseReportRepository:          expenseReportRepository,
+		ExpenseReportStatementRepository: expenseReportStatementRepository,
 	}
 }

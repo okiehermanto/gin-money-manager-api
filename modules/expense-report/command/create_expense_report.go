@@ -34,7 +34,7 @@ func (h *CreateExpenseReport) Handler(c *gin.Context) {
 	user := c.MustGet("user").(userentity.User)
 
 	expenseReport := entity.ExpenseReport{
-		User: user,
+		User: &user,
 		Name: body.Name,
 		Type: valueobject.ExpenseReportType(body.Type),
 		Balance: money.Money{

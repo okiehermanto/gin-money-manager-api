@@ -8,7 +8,7 @@ import (
 )
 
 func BindAndValidate(c *gin.Context, body any) bool {
-	if err := c.ShouldBindJSON(body); err != nil {
+	if err := c.ShouldBind(body); err != nil {
 		response.Error(c, http.StatusBadRequest, GetValidationError(err))
 
 		return false

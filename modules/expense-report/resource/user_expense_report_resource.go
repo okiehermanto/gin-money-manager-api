@@ -20,10 +20,11 @@ func NewUserExpenseReportResource(repository repository.ExpenseReportRepository)
 	return &ExpenseReportResource{
 		BaseResource: &resource.BaseResource[entity.ExpenseReport, dto.EmptyDto, dto.EmptyDto]{
 			Repository: repository,
+			RouteParam: entity.ExpenseReport{}.EntityName(),
 			Relationships: []string{
 				"User.Roles",
 			},
-			Filter: "user_id",
+			Filter: "user",
 		},
 	}
 }

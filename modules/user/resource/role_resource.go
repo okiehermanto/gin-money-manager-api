@@ -19,6 +19,7 @@ func NewRoleResource(repository repository.RoleRepository) *RoleResource {
 	return &RoleResource{
 		BaseResource: &resource.BaseResource[entity.Role, dto.EmptyDto, dto.EmptyDto]{
 			Repository: repository,
+			RouteParam: entity.Role{}.EntityName(),
 			SearchFields: []string{
 				"name",
 			},

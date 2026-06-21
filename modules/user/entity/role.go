@@ -2,6 +2,10 @@ package entity
 
 import "github.com/google/uuid"
 
+func (Role) EntityName() string {
+	return "role"
+}
+
 type Role struct {
 	ID    uuid.UUID `json:"id" gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 	Name  string    `json:"name"`

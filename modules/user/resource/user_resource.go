@@ -19,6 +19,7 @@ func NewUserResource(repository repository.UserRepository) *UserResource {
 	return &UserResource{
 		BaseResource: &resource.BaseResource[entity.User, dto.EmptyDto, dto.EmptyDto]{
 			Repository: repository,
+			RouteParam: entity.User{}.EntityName(),
 			Relationships: []string{
 				"Roles",
 			},

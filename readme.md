@@ -48,7 +48,7 @@ go run main.go
 ## Running Tests
 
 ```bash
-go test ./...
+./scripts/test
 ```
 
 ## Notes

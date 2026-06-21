@@ -7,6 +7,7 @@ import (
 	"gin-money-manager-api/modules/shared/repository/options"
 	"gin-money-manager-api/modules/shared/response"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
@@ -18,6 +19,7 @@ type BaseResource[
 	UpdateDto any,
 ] struct {
 	Repository repository.BaseRepository[Entity]
+	RouteParam string
 
 	Relationships []string
 	SearchFields  []string
@@ -51,9 +53,11 @@ func (r *BaseResource[E, C, U]) Index(c *gin.Context) {
 	}
 
 	if r.Filter != "" {
+		filter := strings.TrimSuffix(r.Filter, "_id") + "_id"
+
 		findAllOptions.Filters = []options.Filter{
 			{
-				Field:    r.Filter,
+				Field:    filter,
 				Operator: "=",
 				Value:    c.Param(r.Filter),
 			},
@@ -78,7 +82,7 @@ func (r *BaseResource[E, C, U]) Index(c *gin.Context) {
 }
 
 func (r *BaseResource[E, C, U]) Show(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param(r.RouteParam)
 
 	entity, err := r.Repository.Find(id, nil)
 
@@ -102,7 +106,7 @@ func (r *BaseResource[E, C, U]) Create(c *gin.Context) {
 }
 
 func (r *BaseResource[E, C, U]) Update(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Param(r.RouteParam)
 
 	var body U
 

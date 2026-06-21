@@ -42,10 +42,7 @@ func (command *AuthCommand) Handler(
 		return
 	}
 
-	if !helper.CheckPassword(
-		body.Password,
-		user.Password,
-	) {
+	if !helper.CheckPassword(body.Password, user.Password) {
 		response.ServerError(c, err.Error())
 		return
 	}
