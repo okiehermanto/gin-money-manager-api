@@ -3,14 +3,14 @@ package routes
 import (
 	"gin-money-manager-api/modules/auth/middleware"
 	"gin-money-manager-api/modules/expense-report/command"
-	"gin-money-manager-api/modules/expense-report/container"
+	"gin-money-manager-api/modules/expense-report/config"
 	"gin-money-manager-api/modules/expense-report/query"
 	"gin-money-manager-api/modules/expense-report/resource"
 
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterExpenseReportStatementRoute(r *gin.Engine, container *container.ExpenseReportContainer) {
+func RegisterExpenseReportStatementRoute(r *gin.Engine, container *config.ExpenseReportContainer) {
 	auth := middleware.Auth(container.UserRepository)
 
 	createExpenseReportStatement := command.NewCreateExpenseReportStatement(
