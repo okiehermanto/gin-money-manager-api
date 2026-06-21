@@ -70,3 +70,5 @@ docs/swagger.yaml
 *.db
 *.sqlite
 *.sqlite3
+
+storage/
